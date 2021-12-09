@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Samueli924/chaoxing自动化</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei",华文细黑,STHeiti,MingLiu;
+        font-size: 16px;
+        font-style: normal;
+        text-decoration: none;
+        color: black;
+    }
+    .clearfix:after {
+        content:"";
+        display:block;
+        visibility:hidden;
+        clear:both;
+    }
+
+    body {
+        width: 100%;
+        min-height: 100vh;
+        background: linear-gradient(
+                135deg,
+                hsl(170deg, 80%, 70%),
+                hsl(190deg, 80%, 70%),
+                hsl(250deg, 80%, 70%),
+                hsl(320deg, 80%, 70%)
+        );
+        background-repeat: no-repeat;
+        background-size: 300% 300%;
+        animation: gradient-move 10s ease alternate infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            background-position: 0% 0%;
+        }
+        100% {
+            background-position: 100% 100%;
+        }
+    }
+
+    .background {
+        text-align: center;
+        place-items: center;
+        background-size: cover;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .main-title {
+        color: #fff;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        font-size: 40px;
+        font-weight: bold;
+        text-shadow: 3px 3px 3px black;
+    }
+
+    .glass {
+        border: 1px solid transparent;
+        display: block;
+        width: 80vw;
+        min-height: 80vh;
+        /* margin-left: 10vw; */
+        margin: 0 auto;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 32px 0 rgba(27, 0, 37, 0.89);
+        border-radius: 10px;
+    }
+    .box {
+        margin: 0 auto;
+    }
+    .scroll {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 10px 0px 10px 0px;
+        /* background-color: #fff; */
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.75);
+    }
+
+    .readme {
+        margin: 0 auto;
+        text-align: center;
+        align-items: center;
+        font-size: 16px;
+        width: 80%;
+        /* margin-bottom: 10px; */
+        /* border-bottom: 2px solid black; */
+        
+    }
+    
+    .split {
+        margin: 0 auto;
+        width: 80%;
+        height: 15px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+    }
+
+     .box {
+         margin-top: 10px;
+         margin-bottom: 10px;
+     }
+
+
+     .badge {
+        margin-left: 5px;
+        margin-right: 5px;
+        text-decoration: none;
+        font-style: normal;
+     }
+
+    .normal-link {
+        text-decoration: none;
+        font-style: normal;
+        color: blue;
+        font-weight: bold;
+    }
+
+    .table-box {
+        margin: 0 auto;
+    }
+
+    .mission {
+        /* margin-top: 10px;
+        margin-bottom: 10px; */
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .small {
+        vertical-align: top;
+        display: inline-block;
+        /* background-color: black; */
+        width: 48%;
+        margin-bottom: 15px;
+    }
+
+    .log-box {
+        overflow-y: scroll;
+        text-align: left;
+        padding-left: 5px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border: 1px solid black;
+        font-size: 12px;    
+        height: 100px;
+    }
+    /*-------滚动条整体样式----*/
+
+    .log-box::-webkit-scrollbar {
+        width:8px;
+        height:8px;
+    }
+
+    .log-box::-webkit-scrollbar-thumb {
+        border-radius:100px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: rgba(255, 255, 255, 0.25);
+
+    }
+
+    .log-box::-webkit-scrollbar-track {
+        -webkit-box-shadow:inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius:0;
+        background:rgba(0,0,0,0.1);
+    }
+
+    .hidden {
+        visibility: hidden;
+    }
+
+    #table-1 thead, #table-1 tr {
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-top-color: rgb(230, 189, 189);
+    }
+
+    #table-1 {
+        margin: 0 auto;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: rgb(230, 189, 189);
+    }
+
+    #table-1 td, #table-1 th {
+        font-weight: bold;
+        padding: 5px 10px;
+        font-size: 12px;
+        font-family: Verdana;
+        color: rgb(177, 106, 104);
+    }
+
+    #table-1 tr:nth-child(even) {
+    background: rgb(238, 211, 210)
+    }
+
+    #table-1 tr:nth-child(odd) {
+    background: #FFF
+    }
+
+</style>
+
+
+
+<body>
+<div class="background">
+    <div class="main-title">Samueli924/chaoxing</div>
+    <div class="glass">
+        <div class="scroll">
+            注意事项
+        </div>
+        <div class="box">
+            <a href="https://github.com/Samueli924/chaoxing" target="_blank" class="badge">
+                <img src="https://img.shields.io/github/stars/Samueli924/chaoxing" alt="Github Stars">
+            </a>
+            <a href="https://github.com/Samueli924/chaoxing" target="_blank" class="badge">
+                <img src="https://img.shields.io/github/forks/Samueli924/chaoxing" alt="Github Forks">
+            </a>
+            <a href="https://github.com/Samueli924/chaoxing" target="_blank" class="badge">
+                <img src="https://img.shields.io/github/languages/code-size/Samueli924/chaoxing" alt="Code-size">
+            </a>
+            <a href="https://github.com/Samueli924/chaoxing" target="_blank" class="badge">
+                <img src="https://img.shields.io/github/v/release/Samueli924/chaoxing?display_name=tag&sort=semver" alt="version">
+            </a>
+            <a href="https://t.me/Samueli924" target="_blank" class="badge">
+                <img src="https://img.shields.io/badge/-Telegram-blue?logo=telegram" alt="Telegram">
+            </a>
+        </div>
+        <div class="readme">
+            欢迎使用Samueli924/chaoxing项目，项目源码地址<a href="https://github.com/Samueli924/chaoxing" class="normal-link">进入</a><br />
+            使用本代码表示已接受要求：<br />
+            本代码遵循 <a href="https://github.com/Samueli924/chaoxing/blob/main/LICENSE" class="normal-link">GPL-3.0 License协议</a>
+            。允许<b>开源/免费使用</b>，不允许使用本代码<b>盈利</b>
+        </div>
+        <div class="split"></div>
+        
+        <div class="scroll">
+            用户列表
+        </div>
+        <div class="table-box">
+            <table id="table-1">
+                <tr>
+                    <td>账号</td>
+                    <td>姓名</td>
+                    <td>学校</td>
+                    <td>是否有效</td>
+                    <td>上次检查时间</td>
+                    <td colspan="3">命令</td>
+
+                </tr>
+                <!-- <tr>
+                    <td>XXXXXXXXXX</td>
+                    <td>XXXXX</td>
+                    <td>XXXXXXXXX</td>
+                    <td>XXX</td>
+                    <td>XXXXXXXXXXXX</td>
+                    <td>XXXXXXX</td>
+                    <td>XXXXXXX</td>
+                    <td>XXXXXXX</td>
+                </tr> -->
+                <tr>
+                    <td colspan="8" onclick="add_user_button()" style="cursor: pointer;">点击新建用户</td>
+                </tr>
+            </table>
+            <div class="box hidden" id="add_form">
+                <label for="usernm">账号</label>
+                <input type="text" name="usernm" id="usernm">
+                <label for="passwd">密码</label>
+                <input type="password" name="passwd" id="passwd">
+                <button onclick="verify()">登录</button>
+            </div>
+            
+        </div>
+        <div class="scroll">
+            课程列表(刷新时间: XXXXXXXXXXXXX)
+        </div>
+        <div class="table-box">
+            <table id="table-1">
+                <tr>
+                    <td>课程ID</td>
+                    <td>课程名</td>
+                    <td>是否结课</td>
+                    <td>是否有记录</td>
+                    <td colspan="2">命令</td>
+                </tr>
+                <!-- <tr>
+                    <td>XXXXXXXXXXXXX</td>
+                    <td>XXXXXXXXXX(2021-XXXX)</td>
+                    <td>XXXX</td>
+                    <td>XXXX</td>
+                    <td>XXXXXXX</td>
+                    <td>XXXXXXXXXX</td>
+                </tr> -->
+            </table>
+        </div>
+
+        <div class="scroll">学习任务</div>
+
+        <div class="mission">
+            <div class="small">
+                <div class="table-box">
+                    <table id="table-1">
+                        <tr>
+                            <th colspan="5">正在进行的学习任务</th>
+                        </tr>
+
+                        <tr>
+                            <td>姓名</td>
+                            <td>课程名</td>
+                            <td>是否正在进行</td>
+                            <td colspan="2">命令</td>
+        
+                        </tr>
+                        <tr>
+                            <!-- <td>XXX</td>
+                            <td>XXXXXXXXXX(2021-XXXX)</td>
+                            <td>XXX</td>
+                            <td>XXXXX</td>
+                            <td>XXXXXXXX</td> -->
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="small">
+                <div class="log-box">
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    function add_user_button() {
+        document.getElementById("add_form").classList.remove("hidden");
+    }
+
+    function verify() {
+        var usernm = document.getElementById("usernm").value
+        var passwd = document.getElementById("passwd").value
+        console.log(usernm)
+        console.log(passwd)
+        if (usernm&&passwd){
+            $.ajax({
+                type: "GET",
+                url: "/api/verify",
+                dataType: "JSON",
+                data: {
+                    "usernm": usernm,
+                    "passwd": passwd,
+                },
+                success: function (response) {
+                    if (response.data.code==1) {
+
+                    }
+                },
+            });
+        }
+        else {
+            var box = document.getElementById("add_form")
+            if (document.getElementById("tips")){
+                box.removeChild(document.getElementById("tips"))
+            }
+            var part = document.createElement("span")
+            part.innerText = "不能为空"
+            part.id = "tips"
+            box.appendChild(part)
+        }
+        
+    }
+</script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</html>
