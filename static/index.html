@@ -501,6 +501,28 @@
                 })
     })
 
+    $(document).on('click','button.add_course',function(e){
+        var courseid = $(this).parent().siblings()[0].innerText
+        var usernm = $("#course_user_id")[0].innerText
+        $.ajax({
+                type: "GET",
+                url: "/api/add_course",
+                dataType: "JSON",
+                data: {
+                    "usernm": usernm,
+                    "courseid": courseid
+                },
+                success: function (response) {
+                    // console.log(response)
+                    if (response.code==200&&response.data.code==1) {
+                            console.log("请求成功" + response.data)
+                            td[3].innerText = "不存在"
+                        }
+                    }
+                })
+    })
+
+
 </script>
     
 </html>

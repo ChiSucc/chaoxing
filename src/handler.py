@@ -77,3 +77,13 @@ def delete_course(usernm, courseid):
     path.check_path(dir)
     path.delete_path(dir)
     return {"code": 1}
+
+
+def add_course(usernm, courseid):
+    path.check_path("saves/{}".format(usernm))
+    if os.path.exists("saves/{}/userinfo.json".format(usernm)):
+        with open("saves/{}/userinfo.json".format(usernm), 'r') as f:
+            info = json.loads(f.read())
+        usernm = info['usernm']
+        passwd = info['passwd']
+        user1 = src.user.User(usernm, passwd)

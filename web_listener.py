@@ -52,12 +52,22 @@ def delete_user():
     ret = handler.delete_user(usernm)
     return resp_ok(ret)
 
+
 @app.route('/api/delete_course', methods=['GET'])
 def delete_course():
     usernm = request.args.get("usernm")
     courseid = request.args.get("courseid")
     ret = handler.delete_course(usernm,courseid)
     return resp_ok(ret)
+
+
+@app.route('/api/add_course', methods=['GET'])
+def delete_course():
+    usernm = request.args.get("usernm")
+    courseid = request.args.get("courseid")
+    ret = handler.add_course(usernm,courseid)
+    return resp_ok(ret)
+
 
 
 if __name__ == "__main__":
