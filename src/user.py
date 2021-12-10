@@ -25,6 +25,9 @@ class User:
         self.passwd = str(passwd)
         self.logger = log.Logger("logs/{}.txt".format(usernm))
 
+    def __del__(self):
+        pass
+
     def login(self,further=False):
         s = requests.session()
         s.headers['User-Agent'] = 'Dalvik/2.1.0 (Linux; U; Android 5.1.1; SM-G9350 Build/LMY48Z) com.chaoxing.mobile/ChaoXingStudy_3_5.21_android_phone_206_1 (SM-G9350; Android 5.1.1; zh_CN)_19698145335.21'
@@ -91,7 +94,6 @@ class User:
         else:
             self.login()
             return self.cookies
-
 
     def refresh_course(self):
         courses = []

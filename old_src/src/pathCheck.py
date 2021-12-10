@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from os.path import exists
 from os import mkdir
-
+import os
 
 def check_path(path):
     """
@@ -34,3 +34,12 @@ def check_file(path):
         check_path('/'.join(_path[:-1]))
     with open(path, 'w'):
         pass
+
+
+def delete_path(path):
+    for i in os.listdir(path):
+        file_data = os.path.join(path,i)
+        if os.path.isfile(file_data):  # os.path.isfile判断是否为文件,如果是文件,就删除.如果是文件夹.递归给del_file.
+            os.remove(file_data)
+        else:
+            delete_path(file_data)

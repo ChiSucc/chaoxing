@@ -1,5 +1,5 @@
 import os
-
+import shutil
 import requests
 import requests.utils
 from base64 import b64encode
@@ -44,8 +44,8 @@ def refresh_user(usernm):
             info = json.loads(f.read())
         usernm = info['usernm']
         passwd = info['passwd']
-        user = src.user.User(usernm,passwd)
-        data = user.get_info()
+        user1 = src.user.User(usernm,passwd)
+        data = user1.get_info()
         return {"code":1,"data":data}
     else:
         return {"code":-2}
@@ -58,8 +58,22 @@ def refresh_course(usernm):
             info = json.loads(f.read())
         usernm = info['usernm']
         passwd = info['passwd']
-        user = src.user.User(usernm, passwd)
-        data = user.refresh_course()
+        user1 = src.user.User(usernm, passwd)
+        data = user1.refresh_course()
         return {"code": 1, "data": data}
     else:
         return {"code": -2}
+
+
+def delete_user(usernm):
+    path.check_path("saves/{}".format(usernm))
+    path.delete_path("saves/{}".format(usernm))
+    os.rmdir("saves/{}".format(usernm))
+    return {"code": 1}
+
+
+def delete_course(usernm, courseid):
+    dir = "saves/{}/{}".format(usernm,courseid)
+    path.check_path(dir)
+    path.delete_path(dir)
+    return {"code": 1}

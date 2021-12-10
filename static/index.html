@@ -215,19 +215,6 @@
         background-color: rgba(177, 106, 104, 0.3);
     }
 
-    /* .refresh_user {
-        
-    }
-
-    .refresh_course {
-        font-size: 12px;
-        background-color: rgba(177, 106, 104, 0.3);
-    }
-
-    .delete_user {
-        font-size: 12px;
-        background-color: rgba(177, 106, 104, 0.3);
-    } */
 
 </style>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
@@ -296,6 +283,7 @@
             课程列表
         </div>
         <div class="table-box">
+            <div id="course_user_id" style="visibility: hidden;">13554337909</div>
             <table id="course_table" class="color-table">
                 <tr>
                     <td>课程ID</td>
@@ -406,6 +394,7 @@
                 dataType: "JSON",
                 success: function (response) {
                     if (response.code==200) {
+                        $("#user_table").children().not(':first-child').remove()
                         console.log("请求成功" + response.data)
                         for (user in response.data) {
                             data = response.data[user]
@@ -437,7 +426,7 @@
                         var data = response.data.data.data
                         // console.log(data)
                         $("#"+usernm).remove()
-                        var tr = "<tr id='"+ data.usernm +"'><td>"+ data.usernm +"</td><td>"+ data.name +"</td><td>"+ data.school +"</td><td>是</td><td>"+ data.tsp +"</td><td><button class='refresh_course'>刷新课程</button></td><td><button class='refresh_user'>刷新用户</button></td><td><button class='delete_user'>删除用户</button></td></tr>"
+                        var tr = "<tr id='"+ data.usernm +"'><td>"+ data.usernm +"</td><td>"+ data.name +"</td><td>"+ data.school +"</td><td>有效</td><td>"+ data.tsp +"</td><td><button class='refresh_course'>刷新课程</button></td><td><button class='refresh_user'>刷新Cookies</button></td><td><button class='delete_user'>删除用户</button></td></tr>"
                         $("#user_table tr:first").after(tr)
                         }
                     }
@@ -461,12 +450,57 @@
                             data = courses[course]
                             var tr = "<tr id='"+ data.id +"'><td>"+ data.id +"</td><td>"+ data.name +"</td><td>"+ data.state +"</td><td>"+ data.exists + "</td><td><button class='add_course'>添加任务</button></td><td><button class='delete_course'>删除缓存</button></td></tr>"
                             $("#course_table tr:first").after(tr)
+                        $("#course_user_id").value = usernm
                         }
                     }
                 }
         })
     })
     
+    $(document).on('click','button.delete_user',function(e){
+        var usernm = e.target.parentNode.parentNode.firstChild.textContent
+        $.ajax({
+                type: "GET",
+                url: "/api/delete_user",
+                dataType: "JSON",
+                data: {
+                    "usernm": usernm,
+                },
+                success: function (response) {
+                    if (response.code==200&&response.data.code==1) {
+                        console.log("请求成功" + response.data)
+                            $("#"+usernm).remove()
+                        }
+                    }
+                })
+    })
+
+    $(document).on('click','button.delete_course',function(e){
+        var td = $(this).parent().siblings()
+        var courseid = td[0].innerText
+        
+        var usernm = $("#course_user_id")[0].textContent
+        // console.log(usernm)
+        // console.log(courseid)
+        // console.log(exists)
+        $.ajax({
+                type: "GET",
+                url: "/api/delete_course",
+                dataType: "JSON",
+                data: {
+                    "usernm": usernm,
+                    "courseid": courseid
+                },
+                success: function (response) {
+                    // console.log(response)
+                    if (response.code==200&&response.data.code==1) {
+                            console.log("请求成功" + response.data)
+                            td[3].innerText = "不存在"
+                        }
+                    }
+                })
+    })
+
 </script>
     
 </html>
