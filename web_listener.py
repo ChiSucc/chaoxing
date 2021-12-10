@@ -62,7 +62,7 @@ def delete_course():
 
 
 @app.route('/api/add_course', methods=['GET'])
-def delete_course():
+def add_course():
     usernm = request.args.get("usernm")
     courseid = request.args.get("courseid")
     ret = handler.add_course(usernm,courseid)

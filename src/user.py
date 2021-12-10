@@ -8,7 +8,7 @@ import json
 import time
 import src.path as path
 import src.log as log
-
+import re
 
 def get_userinfo(session):
     url = 'http://i.mooc.chaoxing.com'
@@ -118,3 +118,57 @@ class User:
                     dic['exists'] = "不存在"
                 courses.append(dic)
         return courses
+
+    def get_course_online(self, usernm, passwd, courseid):
+        course = {}
+        chapterids = []
+        with open('saves/{}/cookies.json'.format(usernm),'r') as f:
+            cookies = json.loads(f.read())
+
+        url = 'http://mooc1-api.chaoxing.com/mycourse?rss=1&mcode='
+        resp = requests.get(url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36"},
+                            cookies=cookies)
+        channelList = resp.json().get("channelList")
+        for item in channelList:
+            if "state" in item["content"]:
+                if str(item['content']['course']['data'][0]['id']) == str(courseid):
+                    channelList_json = item
+                    break
+
+        course['cpi'] = channelList_json['cpi']
+        course['clazzid'] = channelList_json['content']['id']
+        course['courseid'] = channelList_json['content']['course']['data'][0]['id']
+        course['coursenm'] = channelList_json['content']['course']['data'][0]['name']
+        course['teacher'] = channelList_json['content']['course']['data'][0]['teacherfactor']
+        with open('saves/{}/cookies.json'.format(usernm),'r') as f:
+            cookies = json.loads(f.read())
+        url = 'https://mooc1-1.chaoxing.com/visit/stucoursemiddle?courseid=' + str(
+            course['courseid']) + '&clazzid=' + str(course['clazzid']) + '&vc=1&cpi=' + str(course['cpi'])
+
+        resp = requests.get(url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/96.0.4664.93 Safari/537.36"},
+                            cookies=cookies)
+        content = resp.text
+        for chapter in re.findall('\?chapterId=(.*?)&', content):
+            chapterids.append(str(chapter))
+        course['enc'] = re.findall("&clazzid=.*?&enc=(.*?)'", content)[0]
+        course_path = 'saves/{}/{}'.format(usernm, course['courseid'])
+        path.check_path(course_path)
+        with open('{}/courseinfo.json'.format(course_path), 'w') as f:
+            json.dump(course, f)
+        with open('{}/chapterid.json'.format(course_path), 'w') as f:
+            json.dump(chapterids, f)
+        return chapterids, course
+
+
+    def get_course_local(self, usernm, courseid):
+        course_path = 'saves/{}/{}'.format(usernm, courseid)
+        path.check_path(course_path)
+        with open('{}/courseinfo.json'.format(course_path), 'r') as f:
+            course = json.loads(f.read())
+        with open('{}/chapterid.json'.format(course_path), 'r') as f:
+            chapterids = json.loads(f.read())
+        return chapterids, course
+

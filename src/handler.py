@@ -87,3 +87,5 @@ def add_course(usernm, courseid):
         usernm = info['usernm']
         passwd = info['passwd']
         user1 = src.user.User(usernm, passwd)
+        chapterids, course = user1.get_course_online(usernm,passwd, courseid)
+        return course

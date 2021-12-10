@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Samueli924/chaoxing自动化</title>
+    <link rel="stylesheet" type="text/css" href="progressjs.css">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="circle-progress/dist/circle-progress.js"></script>
+
+
+
 </head>
 <style>
     * {
@@ -140,13 +146,7 @@
         padding-right: 5px;
     }
 
-    .small {
-        vertical-align: top;
-        display: inline-block;
-        /* background-color: black; */
-        width: 48%;
-        margin-bottom: 15px;
-    }
+
 
     .log-box {
         overflow-y: scroll;
@@ -215,9 +215,35 @@
         background-color: rgba(177, 106, 104, 0.3);
     }
 
+    .circle-progress {
+        width: 40%;
+        height: auto;
+    }
+
+    .circle-progress-value {
+        stroke-width: 50px;
+        stroke: hsl(100, 90%, 70%);
+    }
+    .circle-progress-circle {
+        stroke-width: 40px;
+        stroke: hsl(100, 15%, 60%);
+        fill: hsl(100, 15%, 60%);
+    }
+    .circle-progress-text {
+        fill: white;
+        font-weight: bold;
+    }
+
+    .small {
+        vertical-align: top;
+        display: inline-block;
+        /* background-color: black; */
+        width: 48%;
+        min-height: 200px;
+        margin-bottom: 15px;
+    }
 
 </style>
-<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 
 
 <body>
@@ -292,48 +318,22 @@
                     <td>是否有记录</td>
                     <td colspan="2">命令</td>
                 </tr>
-                <!-- <tr>
-                    <td>XXXXXXXXXXXXX</td>
-                    <td>XXXXXXXXXX(2021-XXXX)</td>
-                    <td>XXXX</td>
-                    <td>XXXX</td>
-                    <td>XXXXXXX</td>
-                    <td>XXXXXXXXXX</td>
-                </tr> -->
             </table>
         </div>
 
         <div class="scroll">学习任务</div>
-
         <div class="mission">
             <div class="small">
-                <div class="table-box">
-                    <table id="obj_table" class="color-table">
-                        <tr>
-                            <th colspan="5">正在进行的学习任务</th>
-                        </tr>
-
-                        <tr>
-                            <td>姓名</td>
-                            <td>课程名</td>
-                            <td>是否正在进行</td>
-                            <td colspan="2">命令</td>
-        
-                        </tr>
-                        <tr>
-                            <!-- <td>XXX</td>
-                            <td>XXXXXXXXXX(2021-XXXX)</td>
-                            <td>XXX</td>
-                            <td>XXXXX</td>
-                            <td>XXXXXXXX</td> -->
-                        </tr>
-                    </table>
+                <div class="progress">
                 </div>
             </div>
             <div class="small">
-                <div class="log-box">
-
+                <div>当前任务: </div>
+                <div>
+                    <span>10:00/20:00</span>
+                    <span>停止</span>
                 </div>
+                <div class="log-box"></div>
             </div>
         </div>
 
@@ -409,7 +409,7 @@
 </script>
 <script>
     $(document).ready(function() {
-        load_user()
+        load_user();
     })
 
     $(document).on('click','button.refresh_user',function(e){
@@ -503,7 +503,9 @@
 
     $(document).on('click','button.add_course',function(e){
         var courseid = $(this).parent().siblings()[0].innerText
-        var usernm = $("#course_user_id")[0].innerText
+        var usernm = $("#course_user_id")[0].innerHTML
+        console.log(courseid)
+        console.log(usernm)
         $.ajax({
                 type: "GET",
                 url: "/api/add_course",
@@ -513,16 +515,33 @@
                     "courseid": courseid
                 },
                 success: function (response) {
-                    // console.log(response)
-                    if (response.code==200&&response.data.code==1) {
+                    if (response.code==200&&response.data.data.code==1) {
                             console.log("请求成功" + response.data)
-                            td[3].innerText = "不存在"
                         }
                     }
                 })
     })
-
-
 </script>
     
+
+<script>
+    const circleProgress = new CircleProgress(".progress");
+    circleProgress.attr({
+            max: 0,
+            value: 0,
+            indeterminateText: '0',
+            textFormat: 'horizontal',
+        });
+    function init_circle() {
+        circleProgress.attr({
+            max: 100,
+            value: 0,
+            indeterminateText: '0',
+            textFormat: 'horizontal',
+        });
+    }
+    function set_circle(value) {
+        circleProgress.value = value
+    }
+  </script>
 </html>
