@@ -31,6 +31,17 @@ def get_all_user():
     ret = handler.get_all_user()
     return resp_ok(ret)
 
+@app.route('/api/refresh_user', methods=['GET'])
+def refresh_user():
+    usernm = request.args.get("usernm")
+    ret = handler.refresh_user(usernm)
+    return resp_ok(ret)
+
+@app.route('/api/refresh_course', methods=['GET'])
+def refresh_course():
+    usernm = request.args.get("usernm")
+    ret = handler.refresh_course(usernm)
+    return resp_ok(ret)
 
 if __name__ == "__main__":
     CORS(app, supports_credentials=True)

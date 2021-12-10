@@ -1,3 +1,5 @@
+import os.path
+
 import requests
 import requests.utils
 from base64 import b64encode
@@ -45,6 +47,7 @@ class User:
                 self.name, self.school = get_userinfo(s)
                 self.tsp = time.strftime("%Y%m%d %H:%M:%S", time.localtime(time.time()))
                 cookie = requests.utils.dict_from_cookiejar(resp.cookies)
+                self.cookies = cookie
                 user['usernm'] = self.usernm
                 user['passwd'] = self.passwd
                 user['userid'] = cookie['_uid']
@@ -56,6 +59,8 @@ class User:
                 path.check_file('saves/{}/userinfo.json'.format(self.usernm))
                 with open('saves/{}/userinfo.json'.format(self.usernm), 'w') as f:
                     json.dump(user, f)
+                with open('saves/{}/cookies.json'.format(self.usernm), 'w') as f:
+                    json.dump(cookie, f)
                 self.logger.debug("本地文件写入成功")
                 if further:
                     self.logger.debug("返回session模式")
@@ -78,3 +83,36 @@ class User:
             return {"code":1, "data":{"usernm": self.usernm,"name": self.name, "school": self.school, "tsp": self.tsp}}
         else:
             return ret
+
+    def get_cookies(self):
+        if os.path.exists("saves/{}/cookies.json".format(self.usernm)):
+            with open("saves/{}/cookies.json".format(self.usernm), 'r') as f:
+                return json.loads(f.read())
+        else:
+            self.login()
+            return self.cookies
+
+
+    def refresh_course(self):
+        courses = []
+        cookies = self.get_cookies()
+        resp = requests.get("http://mooc1-api.chaoxing.com/mycourse?rss=1&mcode=", headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36"},
+                            cookies=cookies)
+        result = resp.json()
+        channelList = result['channelList']
+        for item in channelList:
+            if "state" in item["content"]:
+                dic = {}
+                dic['id'] = item['content']['course']['data'][0]['id']
+                dic['name'] = item['content']['course']['data'][0]['name']
+                if item["content"]["state"] == 0:
+                    dic['state'] = "开课"
+                else:
+                    dic['state'] = "结课"
+                if os.path.exists("saves/{}/{}".format(self.usernm,item['content']['course']['data'][0]['id'])):
+                    dic['exists'] = "存在"
+                else:
+                    dic['exists'] = "不存在"
+                courses.append(dic)
+        return courses

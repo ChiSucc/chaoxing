@@ -210,9 +210,13 @@
     background: #FFF
     }
 
-    .refresh_user {
+    td button {
         font-size: 12px;
         background-color: rgba(177, 106, 104, 0.3);
+    }
+
+    /* .refresh_user {
+        
     }
 
     .refresh_course {
@@ -223,7 +227,7 @@
     .delete_user {
         font-size: 12px;
         background-color: rgba(177, 106, 104, 0.3);
-    }
+    } */
 
 </style>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
@@ -270,7 +274,7 @@
                     <td>账号</td>
                     <td>姓名</td>
                     <td>学校</td>
-                    <td>是否有效</td>
+                    <td>Cookies</td>
                     <td>上次检查时间</td>
                     <td colspan="3">命令</td>
 
@@ -289,7 +293,7 @@
             
         </div>
         <div class="scroll">
-            课程列表(刷新时间: XXXXXXXXXXXXX)
+            课程列表
         </div>
         <div class="table-box">
             <table id="course_table" class="color-table">
@@ -372,7 +376,8 @@
                 success: function (response) {
                     if (response.data.code==1) {
                         var data = response.data.data
-                        var tr = "<tr><td>"+ data.usernm +"</td><td>"+ data.name +"</td><td>"+ data.school +"</td><td>是</td><td>"+ data.tsp +"</td><td><button class='refresh_course'>刷新课程</button></td><td><button class='refresh_user'>刷新用户</button></td><td<button class='delete_user'>删除用户</button></td></tr>"
+                        $("#"+usernm).remove()
+                        var tr = "<tr id='"+ data.usernm +"'><td>"+ data.usernm +"</td><td>"+ data.name +"</td><td>"+ data.school +"</td><td>有效</td><td>"+ data.tsp +"</td><td><button class='refresh_course'>刷新课程</button></td><td><button class='refresh_user'>刷新Cookies</button></td><td><button class='delete_user'>删除用户</button></td></tr>"
                         $("#user_table tr:first").after(tr)
                         $("#usernm").val("")
                         $("#passwd").val("")
@@ -401,9 +406,10 @@
                 dataType: "JSON",
                 success: function (response) {
                     if (response.code==200) {
+                        console.log("请求成功" + response.data)
                         for (user in response.data) {
                             data = response.data[user]
-                            var tr = "<tr><td>"+ data.usernm +"</td><td>"+ data.name +"</td><td>"+ data.school +"</td><td>是</td><td>"+ data.tsp +"</td><td><button class='refresh_course'>刷新课程</button></td><td><button class='refresh_user'>刷新用户</button></td><td><button class='delete_user'>删除用户</button></td></tr>"
+                            var tr = "<tr id='"+ data.usernm +"'><td>"+ data.usernm +"</td><td>"+ data.name +"</td><td>"+ data.school +"</td><td>"+ data.valid +"</td><td>"+ data.tsp +"</td><td><button class='refresh_course'>刷新课程</button></td><td><button class='refresh_user'>刷新Cookies</button></td><td><button class='delete_user'>删除用户</button></td></tr>"
                             $("#user_table tr:first").after(tr)
                         }
                     }
@@ -415,12 +421,52 @@
 <script>
     $(document).ready(function() {
         load_user()
-        bind_button()
     })
 
-    $("button.refresh_user").click(function(){
-        console.log("button clicked")
-    });
+    $(document).on('click','button.refresh_user',function(e){
+        var usernm = e.target.parentNode.parentNode.firstChild.textContent
+        $.ajax({
+                type: "GET",
+                url: "/api/refresh_user",
+                dataType: "JSON",
+                data: {
+                    "usernm": usernm,
+                },
+                success: function (response) {
+                    if (response.code==200&&response.data.code==1) {
+                        var data = response.data.data.data
+                        // console.log(data)
+                        $("#"+usernm).remove()
+                        var tr = "<tr id='"+ data.usernm +"'><td>"+ data.usernm +"</td><td>"+ data.name +"</td><td>"+ data.school +"</td><td>是</td><td>"+ data.tsp +"</td><td><button class='refresh_course'>刷新课程</button></td><td><button class='refresh_user'>刷新用户</button></td><td><button class='delete_user'>删除用户</button></td></tr>"
+                        $("#user_table tr:first").after(tr)
+                        }
+                    }
+        })
+    })
+
+    $(document).on('click','button.refresh_course',function(e){
+        var usernm = e.target.parentNode.parentNode.firstChild.textContent
+        $.ajax({
+                type: "GET",
+                url: "/api/refresh_course",
+                dataType: "JSON",
+                data: {
+                    "usernm": usernm,
+                },
+                success: function (response) {
+                    if (response.code==200&&response.data.code==1) {
+                        console.log("请求成功" + response.data)
+                        var courses = response.data.data
+                        for (course in courses) {
+                            data = courses[course]
+                            var tr = "<tr id='"+ data.id +"'><td>"+ data.id +"</td><td>"+ data.name +"</td><td>"+ data.state +"</td><td>"+ data.exists + "</td><td><button class='add_course'>添加任务</button></td><td><button class='delete_course'>删除缓存</button></td></tr>"
+                            $("#course_table tr:first").after(tr)
+                        }
+                    }
+                }
+        })
+    })
+    
 </script>
     
 </html>
