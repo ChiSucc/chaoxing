@@ -34,6 +34,7 @@ def show_status(speed, name, totalmin, totalsec, done, job_done, totaljob):
         time.sleep(wait_time)
         done += 1
 
+
 def do_mp4(usernm, course, session, mp4, speed):
     """
     完成所有的MP4任务点

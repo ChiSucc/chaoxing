@@ -10,6 +10,10 @@ import src.path as path
 import src.log as log
 import re
 
+import src.forework
+headers = {
+    'User-Agent':'Dalvik/2.1.0 (Linux; U; Android 5.1.1; SM-G9350 Build/LMY48Z) com.chaoxing.mobile/ChaoXingStudy_3_5.21_android_phone_206_1 (SM-G9350; Android 5.1.1; zh_CN)_1969814533'
+}
 def get_userinfo(session):
     url = 'http://i.mooc.chaoxing.com'
     resp = session.get(url)
@@ -162,7 +166,6 @@ class User:
             json.dump(chapterids, f)
         return chapterids, course
 
-
     def get_course_local(self, usernm, courseid):
         course_path = 'saves/{}/{}'.format(usernm, courseid)
         path.check_path(course_path)
@@ -172,3 +175,17 @@ class User:
             chapterids = json.loads(f.read())
         return chapterids, course
 
+    def get_course(self, usernm, passwd, courseid):
+        cookies = self.get_cookies()
+        if os.path.exists("saves/{}/{}".format(usernm, courseid)):
+            chapterids, course = self.get_course_local(usernm, courseid)
+        else:
+            chapterids, course = self.get_course_online(usernm, passwd, courseid)
+
+        jobs = src.forework.find_objectives(usernm, chapterids, course['courseid'], cookies)
+        mp4, ppt = src.forework.detect_job_type(jobs, usernm, course['courseid'], cookies)
+        course = src.forework.get_openc(usernm, course, cookies)
+        return jobs, course, mp4, ppt
+
+    def run(self, usernm, passwd, courseid):
+        jobs, course, mp4, ppt = self.get_course(usernm, passwd, courseid)
